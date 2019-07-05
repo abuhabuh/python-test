@@ -1,0 +1,5 @@
+aiohttp  # For gunicorn asyncio
+flask
+gevent  # For gunicorn asyncio gevent 
+gunicorn
+requests
