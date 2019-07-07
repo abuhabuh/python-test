@@ -1,17 +1,18 @@
 # Overview
 
-## Problem
+Demonstrate different python application server (e.g. gunicorn) runtime
+configurations to achieve concurrency making IO bound calls to 3rd parties.
 
-We are building a python backend server that has two endpoints. One
-is slower and network IO bound. One is a fast static string response. We do
-not want the slower IO bound endpoint to block the fast one for a large number
-of concurrent requests. We want to handle as many concurrent requests as
-possible.
+The `proxy` represents the application server. The `proxy` makes http
+requests to a simulated `third_party` service with a built in response delay.
+
+todo: write about client testing if any
+todo: prove there is no request bottle neck associated with actual http calls out from gevents
 
 # Installation
 
 1. pip install requirements
-2. brew install siege
+
 
 # Reference
 
@@ -20,7 +21,3 @@ possible.
 
 * Gunicorn concurrency post
 https://medium.com/@genchilu/brief-introduction-about-the-types-of-worker-in-gunicorn-and-respective-suitable-scenario-67b0c0e7bd62
-
-# Todo
-
-* Prove there is no request bottle neck associated with actual http calls out from gevents

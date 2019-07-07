@@ -1,0 +1,25 @@
+version: '3'
+services:
+  proxy-sync:
+    # boot up the proxy server on localhost port 5000
+    # proxy server runs with 4 workers on 4 processes
+    build: proxy/
+    image: concurrent-http_proxy
+    ports:
+      - "5000:5000"
+    command: gunicorn -w 4 -b 0.0.0.0:5000 proxy:app
+  proxy-async:
+    # boot up the proxy server on localhost port 5000
+    # proxy server runs with 1 async worker on single process & thread
+    build: proxy/
+    image: concurrent-http_proxy
+    ports:
+      - "5001:5000"
+    command: gunicorn -w 4 -k gevent -b 0.0.0.0:5000 proxy:app
+  third_party:
+    # boot up third party server
+    build: third_party/
+    ports:
+      - "4000:5000"
+    # start app server with 4 workers on 4 processes
+    command: gunicorn -w 4 -b 0.0.0.0:5000 third_party:app
