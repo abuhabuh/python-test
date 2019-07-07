@@ -1,25 +1,48 @@
 version: '3'
+
+
+# Service block below represents two ways of running a proxy service in front
+# of a `third party`
+#
+# Example load test via siege:
+# - siege -c 16 -t 4s http://localhost:5000/slow-third-party | grep -v HTTP*
 services:
+
+  # proxy-sync server is a proxy server for the third party that is bound by
+  # a maximum number of concurrent workers
   proxy-sync:
-    # boot up the proxy server on localhost port 5000
-    # proxy server runs with 4 workers on 4 processes
     build: proxy/
     image: concurrent-http_proxy
+    # limit resources to 1 cpu
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
     ports:
       - "5000:5000"
     command: gunicorn -w 4 -b 0.0.0.0:5000 proxy:app
+
+  # proxy-async server is a proxy server for the third party that uses python
+  # asycnio / gevent to support many more concurrent requests
   proxy-async:
-    # boot up the proxy server on localhost port 5000
-    # proxy server runs with 1 async worker on single process & thread
     build: proxy/
     image: concurrent-http_proxy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
     ports:
       - "5001:5000"
     command: gunicorn -w 4 -k gevent -b 0.0.0.0:5000 proxy:app
+
+  # We assume third party can handle a large number of concurrent requests
+  # so we boot it with gunicorn in async mode
   third_party:
-    # boot up third party server
     build: third_party/
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
     ports:
       - "4000:5000"
-    # start app server with 4 workers on 4 processes
-    command: gunicorn -w 4 -b 0.0.0.0:5000 third_party:app
+    command: gunicorn -w 4 -k gevent -b 0.0.0.0:5000 third_party:app

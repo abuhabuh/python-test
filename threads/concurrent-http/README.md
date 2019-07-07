@@ -21,3 +21,6 @@ todo: prove there is no request bottle neck associated with actual http calls ou
 
 * Gunicorn concurrency post
 https://medium.com/@genchilu/brief-introduction-about-the-types-of-worker-in-gunicorn-and-respective-suitable-scenario-67b0c0e7bd62
+
+* Gunicorn gevent external C library dependency issues
+https://tech.wayfair.com/2018/07/blocking-io-in-gunicorn-gevent-workers/
