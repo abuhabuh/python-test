@@ -3,9 +3,6 @@ version: '3'
 
 # Service block below represents two ways of running a proxy service in front
 # of a `third party`
-#
-# Example load test via siege:
-# - siege -c 16 -t 4s http://localhost:5000/slow-third-party | grep -v HTTP*
 services:
 
   # proxy-sync server is a proxy server for the third party that is bound by
